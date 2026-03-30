@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Welcome — KBC Quiz Game</title>
+<style>
+  :root{--bg1:#0b0f19; --gold:#d4af37; --card:#0f1724; --muted:#bfc8d6}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#06101a,#0b0f19);color:#fff}
+  .wrap{max-width:1000px;margin:80px auto;padding:28px;display:flex;gap:28px;align-items:center}
+  .logo{width:120px;height:120px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#b08b2b);display:flex;align-items:center;justify-content:center;font-weight:900;color:#06101a;font-size:28px;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+  .hero{flex:1}
+  h1{margin:0;font-size:30px;color:var(--gold)}
+  p{color:var(--muted);margin:10px 0 18px 0}
+  .actions{display:flex;gap:12px}
+  .btn{background:var(--gold);color:#06101a;border:none;padding:12px 16px;border-radius:8px;cursor:pointer;font-weight:700}
+  .btn.ghost{background:transparent;border:2px solid rgba(212,175,55,.12);color:var(--gold)}
+  .topright{position:fixed;right:18px;top:18px}
+  .topright a{color:var(--gold);text-decoration:none;margin-left:10px;font-weight:700}
+  footer{color:var(--muted);text-align:center;margin-top:40px}
+  @media(max-width:880px){.wrap{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<div class="topright">
+  <a href="signup.html">Sign Up</a>
+  <a href="login.html" style="margin-left:14px">Sign In</a>
+</div>
+
+<div class="wrap">
+  <div class="logo">KBC</div>
+  <div class="hero">
+    <h1>Welcome to KBC Quiz Game</h1>
+    <p>Play a quick batch of 10 KBC-style questions. Create a free account, sign in, read rules on your dashboard and play.</p>
+    <div class="actions">
+      <a class="btn" href="signup.html">Create Account</a>
+      <a class="btn ghost" href="login.html">Already have an account? Sign In</a>
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>

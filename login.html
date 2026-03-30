@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sign In — KBC Quiz Game</title>
+<style>
+  :root{--bg:#07101b;--gold:#d4af37;--muted:#bfc8d6}
+  body{margin:0;font-family:Inter,Arial;background:linear-gradient(180deg,#04101a,#07101b);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:12px;min-width:340px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  h2{color:var(--gold);margin:0 0 8px 0}
+  label{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+  input{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#06111a;color:#fff}
+  .btn{margin-top:14px;background:var(--gold);color:#07101b;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+  .link{margin-top:10px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Sign In</h2>
+    <label>Email</label><input id="email" type="email" placeholder="you@example.com" />
+    <label>Password</label><input id="pass" type="password" placeholder="Password" />
+    <button class="btn" id="login">Sign In</button>
+    <div class="link">New? <a href="signup.html" style="color:var(--gold)">Create account</a></div>
+  </div>
+
+<script>
+document.getElementById('login').addEventListener('click', ()=>{
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const pass = document.getElementById('pass').value;
+  const key = 'kbc_users_v1';
+  const arr = JSON.parse(localStorage.getItem(key)||'[]');
+  const user = arr.find(u=>u.email===email && u.password===pass);
+  if(!user){ alert('Invalid credentials'); return; }
+  localStorage.setItem('kbc_current', JSON.stringify({name:user.name,email:user.email}));
+  alert('Login success — Redirecting to dashboard...');
+  location.href='dashboard.html';
+});
+</script>
+</body>
+</html>

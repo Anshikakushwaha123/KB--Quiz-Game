@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard — KBC Quiz Game</title>
+<style>
+  :root{--bg:#04060a;--gold:#d4af37;--muted:#bfc8d6}
+  body{margin:0;font-family:Inter,Arial;background:linear-gradient(180deg,#020305,#04060a);color:#fff}
+  header{padding:18px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03)}
+  .brand{font-weight:900;color:var(--gold);font-size:20px}
+  .user{font-weight:700}
+  .wrap{max-width:1000px;margin:28px auto;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:20px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px}
+  h2{margin:0 0 8px 0;color:var(--gold)}
+  ol{color:#d6dbe6;padding-left:18px}
+  .btn{background:var(--gold);color:#04060a;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+  .small{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">KBC Quiz Game</div>
+  <div><span class="user" id="usr">Player</span> &nbsp; <button id="logout" class="btn" style="background:transparent;color:var(--gold);border:1px solid rgba(212,175,55,.12)">Logout</button></div>
+</header>
+
+<div class="wrap">
+  <main class="card">
+    <h2>Welcome to your Dashboard</h2>
+    <div class="small" id="intro">Read rules below and click Start Game to play a 10-question batch.</div>
+
+    <div style="margin-top:16px" class="card">
+      <h3 style="margin:0 0 8px 0;color:var(--gold)">KBC Rules (English)</h3>
+      <ol class="small">
+        <li>You will be shown <strong>10 questions</strong> on one page.</li>
+        <li>Select one option per question. You can change answers before submitting.</li>
+        <li>Click <strong>Submit All</strong> to grade — score out of 10 will be shown.</li>
+        <li>No negative marking; each correct = 1 point.</li>
+      </ol>
+      <div style="margin-top:12px"><button class="btn" id="start">Start Game</button></div>
+    </div>
+  </main>
+
+  <aside class="card">
+    <h3 style="color:var(--gold)">Quick Info</h3>
+    <p class="small">Your account and progress are stored locally in this browser. You can play multiple batches. To change user, click Logout.</p>
+    <div style="margin-top:12px"><a href="welcome.html" style="color:var(--gold);text-decoration:none">← Back to Welcome</a></div>
+  </aside>
+</div>
+
+<script>
+const cur = JSON.parse(localStorage.getItem('kbc_current')||'null');
+if(!cur){ alert('Please sign in first'); location.href='welcome.html'; } else {
+  document.getElementById('usr').textContent = cur.name;
+}
+document.getElementById('start').addEventListener('click', ()=>{ location.href='game.html';});
+document.getElementById('logout').addEventListener('click', ()=>{ localStorage.removeItem('kbc_current'); alert('Logged out'); location.href='welcome.html';});
+</script>
+</body>
+</html>

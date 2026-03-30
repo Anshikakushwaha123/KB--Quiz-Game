@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Result — KBC Quiz Game</title>
+<style>
+  :root{--bg:#04060a;--gold:#d4af37;--muted:#bfc8d6}
+  body{margin:0;font-family:Inter,Arial;background:linear-gradient(180deg,#020305,#04060a);color:#fff;padding:18px}
+  .wrap{max-width:1000px;margin:28px auto}
+  .top{display:flex;justify-content:space-between;align-items:center}
+  .score{font-size:28px;color:var(--gold);font-weight:900}
+  .qbox{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:10px;margin:12px 0;border-left:6px solid rgba(255,255,255,0.03)}
+  .opt{padding:8px;border-radius:8px;margin:6px 0}
+  .correct{background:#062f19;color:#bff3c0}
+  .wrong{background:#3b0a0f;color:#ffc8c8}
+  .neutral{background:transparent;border:1px solid rgba(255,255,255,0.03)}
+  .btn{background:var(--gold);color:#04060a;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"></div>
+
+<script>
+const res = JSON.parse(localStorage.getItem('kbc_latest_result')||'null');
+if(!res){ alert('No result found. Start a game first.'); location.href='dashboard.html'; }
+const wrap = document.getElementById('wrap');
+wrap.innerHTML = `<div class="top"><div class="score">Score: ${res.score} / ${res.details.length}</div>
+<div><button class="btn" id="playagain">Play Again</button> <a href="dashboard.html" style="color:#d4af37;margin-left:12px;text-decoration:none">Back to Dashboard</a></div></div>`;
+res.details.forEach(d=>{
+  const box = document.createElement('div');
+  box.className = 'qbox';
+  let html = `<div class="qtitle"><strong>${d.idx+1}.</strong> ${d.q.q}</div>`;
+  d.q.a.forEach((opt, oi)=>{
+    let cls = 'opt neutral';
+    if(oi === d.correct) cls = 'opt correct';
+    else if(d.chosen === oi && d.chosen !== d.correct) cls = 'opt wrong';
+    html += `<div class="${cls}">${String.fromCharCode(65+oi)}. ${opt}${oi===d.correct? '  — Correct':''}${(d.chosen===oi && d.chosen!==d.correct)? ' — Your answer': ''}</div>`;
+  });
+  box.innerHTML = html;
+  wrap.appendChild(box);
+});
+document.getElementById('playagain').addEventListener('click', ()=>{ location.href='game.html'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Game — KBC Quiz Game</title>
+<style>
+  :root{--bg:#04060a;--gold:#d4af37;--muted:#bfc8d6}
+  body{margin:0;font-family:Inter,Arial;background:linear-gradient(180deg,#020305,#04060a);color:#fff;padding:18px}
+  header{display:flex;justify-content:space-between;align-items:center}
+  .brand{font-weight:900;color:var(--gold)}
+  .container{max-width:1000px;margin:22px auto}
+  .qbox{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:10px;margin:12px 0;border:1px solid rgba(255,255,255,0.03)}
+  .qtitle{font-weight:700;margin-bottom:8px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;background:transparent}
+  .opt.selected{outline:3px solid rgba(212,175,55,0.12);background:rgba(212,175,55,0.04)}
+  .btn{background:var(--gold);color:#04060a;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+  .hint{color:var(--muted);font-size:13px}
+  @media(max-width:760px){ .opts{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">KBC Quiz Game — Play</div>
+  <div><a href="dashboard.html" style="color:var(--gold);text-decoration:none">← Back</a></div>
+</header>
+
+<div class="container" id="wrap"></div>
+
+<div style="max-width:1000px;margin:18px auto;display:flex;justify-content:space-between;align-items:center">
+  <div class="hint">Select answers for all 10 questions and then click Submit All.</div>
+  <div>
+    <button class="btn" id="submitAll">Submit All</button>
+  </div>
+</div>
+
+<script>
+/* Question bank (30 items) */
+const BANK = [
+  {q:"India's capital city?", a:["Mumbai","New Delhi","Kolkata","Chennai"], correct:1},
+  {q:"Taj Mahal is located in which city?", a:["Agra","Jaipur","Delhi","Lucknow"], correct:0},
+  {q:"National animal of India?", a:["Elephant","Lion","Tiger","Cow"], correct:2},
+  {q:"Largest planet in our solar system?", a:["Earth","Mars","Jupiter","Venus"], correct:2},
+  {q:"Who invented the World Wide Web?", a:["Bill Gates","Tim Berners-Lee","Steve Jobs","Larry Page"], correct:1},
+  {q:"Python is what type of language?", a:["Compiled","Interpreted","Markup","Assembly"], correct:1},
+  {q:"Which gas is most abundant in the earth's atmosphere?", a:["Oxygen","Nitrogen","CO2","Helium"], correct:1},
+  {q:"Year India became independent?", a:["1945","1947","1950","1952"], correct:1},
+  {q:"Fastest land animal?", a:["Cheetah","Horse","Lion","Elephant"], correct:0},
+  {q:"HTML stands for?", a:["Hyper Text Markup Language","High Text Machine Language","Hyper Transfer Markup Link","None"], correct:0},
+  {q:"Who was India's first Prime Minister?", a:["Nehru","Patel","Gandhi","Azad"], correct:0},
+  {q:"Which is the largest ocean?", a:["Atlantic","Pacific","Indian","Arctic"], correct:1},
+  {q:"What does DNA stand for?", a:["Deoxyribonucleic acid","Dioxyribo acid","Dioxin nucleic acid","None"], correct:0},
+  {q:"Which metal is lightest?", a:["Gold","Silver","Lithium","Lead"], correct:2},
+  {q:"Which is called the powerhouse of the cell?", a:["Nucleus","Mitochondria","Ribosome","Chloroplast"], correct:1},
+  {q:"Speed of light is approx?", a:["3x10^6 m/s","3x10^8 m/s","3x10^5 m/s","3x10^7 m/s"], correct:1},
+  {q:"Which instrument measures atmospheric pressure?", a:["Thermometer","Barometer","Hygrometer","Anemometer"], correct:1},
+  {q:"Largest continent in the world?", a:["Africa","Asia","Europe","America"], correct:1},
+  {q:"Which planet is called the morning star?", a:["Mars","Venus","Mercury","Jupiter"], correct:1},
+  {q:"Primary language spoken in Brazil?", a:["Spanish","Portuguese","English","French"], correct:1},
+  {q:"What is H2O?", a:["Salt","Water","Oxygen","Hydrogen"], correct:1},
+  {q:"Hardest natural substance?", a:["Gold","Iron","Diamond","Silver"], correct:2},
+  {q:"Who wrote 'Hamlet'?", a:["Dickens","Shakespeare","Tolkien","Hemingway"], correct:1},
+  {q:"The process plants use sunlight to make food?", a:["Respiration","Photosynthesis","Digestion","Transpiration"], correct:1},
+  {q:"Which organ pumps blood?", a:["Liver","Kidney","Heart","Lung"], correct:2},
+  {q:"Currency of Japan?", a:["Dollar","Euro","Yen","Rupee"], correct:2},
+  {q:"Which is a prime number?", a:["12","15","17","21"], correct:2},
+  {q:"Which month has 28 days?", a:["February","March","April","May"], correct:0},
+  {q:"Smallest unit of life?", a:["Organ","Tissue","Cell","Molecule"], correct:2},
+  {q:"What do bees produce?", a:["Milk","Silk","Honey","Oil"], correct:2}
+];
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+const wrap = document.getElementById('wrap');
+let batch = shuffle(BANK.slice()).slice(0,10);
+let resp = {}; // idx -> chosen option index
+
+function renderBatch(){
+  wrap.innerHTML = '';
+  batch.forEach((q, idx)=>{
+    const box = document.createElement('div');
+    box.className = 'qbox';
+    box.innerHTML = `<div class="qtitle">${idx+1}. ${q.q}</div>
+      <div class="opts">
+        ${q.a.map((opt,oi)=>`<div class="opt" data-q="${idx}" data-oi="${oi}">${String.fromCharCode(65+oi)}. ${opt}</div>`).join('')}
+      </div>`;
+    wrap.appendChild(box);
+  });
+
+  document.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=> {
+      const qidx = Number(el.dataset.q), oi = Number(el.dataset.oi);
+      // deselect siblings
+      document.querySelectorAll(`.opt[data-q="${qidx}"]`).forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      resp[qidx] = oi;
+    });
+  });
+}
+
+document.getElementById('submitAll').addEventListener('click', ()=>{
+  // optional: check all answered
+  const answered = Object.keys(resp).length;
+  if(answered < 10){
+    if(!confirm(`You answered ${answered}/10. Submit anyway?`)) return;
+  }
+  // grade
+  let score = 0;
+  const details = batch.map((q, idx)=>{
+    const chosen = resp.hasOwnProperty(idx) ? resp[idx] : null;
+    if(chosen === q.correct) score++;
+    return {q, idx, chosen, correct: q.correct};
+  });
+  // store results and redirect
+  localStorage.setItem('kbc_latest_result', JSON.stringify({score, details}));
+  location.href = 'result.html';
+});
+
+renderBatch();
+</script>
+</body>
+</html>
